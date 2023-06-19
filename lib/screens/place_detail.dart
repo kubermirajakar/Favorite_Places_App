@@ -9,7 +9,7 @@ class PlaceDetailScreen extends StatelessWidget {
     final lat = place.placeLocation.lat;
     final lng = place.placeLocation!.lng;
 
-    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
+    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=';
   }
 
   @override

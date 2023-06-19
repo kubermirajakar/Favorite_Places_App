@@ -23,7 +23,7 @@ class _LocationInputSTate extends State<LocationInput> {
     final lat = _pickedLocation!.lat;
     final lng = _pickedLocation!.lng;
 
-    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
+    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=';
   }
 
   void _getCurrentLocation() async {
@@ -54,7 +54,7 @@ class _LocationInputSTate extends State<LocationInput> {
     locationData = await location.getLocation();
 
     final url = Uri.parse(
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/${locationData.longitude},${locationData.latitude}.json?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A');
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/${locationData.longitude},${locationData.latitude}.json?access_token=');
 
     final response = await http.get(url);
 

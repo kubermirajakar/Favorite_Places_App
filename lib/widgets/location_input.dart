@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:favoriteplacesapp/models/place.dart';
+import 'package:favoriteplacesapp/screens/map_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +25,27 @@ class _LocationInputSTate extends State<LocationInput> {
     final lat = _pickedLocation!.lat;
     final lng = _pickedLocation!.lng;
 
-    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=';
+    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
+  }
+
+  void _savePlace(double lat, double lng) async {
+    final url = Uri.parse(
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/$lng,$lat.json?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A');
+
+    final response = await http.get(url);
+
+    final resData = json.decode(response.body);
+    // print(resData);
+    print(resData['features'][0]['place_name']);
+
+    setState(() {
+      _pickedLocation = PlaceLocation(
+          address: resData['features'][0]['place_name'], lat: lat, lng: lng);
+
+      _isGettingCurrentLocation = false;
+    });
+
+    widget.onSelectPlaceLocation(_pickedLocation!);
   }
 
   void _getCurrentLocation() async {
@@ -53,25 +75,21 @@ class _LocationInputSTate extends State<LocationInput> {
     });
     locationData = await location.getLocation();
 
-    final url = Uri.parse(
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/${locationData.longitude},${locationData.latitude}.json?access_token=');
+    _savePlace(locationData.latitude!, locationData.longitude!);
+  }
 
-    final response = await http.get(url);
+  void _selectOnMap() async {
+    final latLngValueRetured = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (ctx) => MapScreen(isSelecting: true),
+      ),
+    );
 
-    final resData = json.decode(response.body);
-    // print(resData);
-    print(resData['features'][0]['place_name']);
+    if (latLngValueRetured == null) {
+      return;
+    }
 
-    setState(() {
-      _pickedLocation = PlaceLocation(
-          address: resData['features'][0]['place_name'],
-          lat: locationData.latitude!,
-          lng: locationData.longitude!);
-
-      _isGettingCurrentLocation = false;
-    });
-
-    widget.onSelectPlaceLocation(_pickedLocation!);
+    _savePlace(latLngValueRetured.latitude, latLngValueRetured.longitude);
   }
 
   @override
@@ -117,7 +135,7 @@ class _LocationInputSTate extends State<LocationInput> {
               label: Text('Get Current Location'),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: Icon(Icons.map),
               label: Text('Select on map'),
             ),

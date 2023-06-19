@@ -1,4 +1,5 @@
 import 'package:favoriteplacesapp/models/place.dart';
+import 'package:favoriteplacesapp/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class PlaceDetailScreen extends StatelessWidget {
     final lat = place.placeLocation.lat;
     final lng = place.placeLocation!.lng;
 
-    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=';
+    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
   }
 
   @override
@@ -33,8 +34,19 @@ class PlaceDetailScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                    radius: 70, backgroundImage: NetworkImage(locationImage)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => MapScreen(isSelecting: false),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(locationImage),
+                  ),
+                ),
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),

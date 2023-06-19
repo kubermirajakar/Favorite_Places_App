@@ -16,11 +16,13 @@ class _addPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _textController = TextEditingController();
   String? _selectedImage;
   PlaceLocation? placeLocation;
+
   void _savePlace() {
     final _enteredTitle = _textController.text;
-    if (_enteredTitle == null ||
-        _enteredTitle.isEmpty ||
-        _selectedImage == null) {
+    if (_enteredTitle.isEmpty ||
+        _selectedImage == null ||
+        placeLocation == null) {
+      print('every thing is null');
       return;
     }
 
@@ -62,8 +64,8 @@ class _addPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               height: 10,
             ),
             LocationInput(
-              placeLocation: (placeLocation) {
-                placeLocation = placeLocation;
+              onSelectPlaceLocation: (onSelectPlaceLocation) {
+                placeLocation = onSelectPlaceLocation;
               },
             ),
             const SizedBox(

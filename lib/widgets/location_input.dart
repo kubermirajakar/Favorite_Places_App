@@ -6,9 +6,9 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key, required this.placeLocation});
+  const LocationInput({super.key, required this.onSelectPlaceLocation});
 
-  final void Function(PlaceLocation placeLocation) placeLocation;
+  final void Function(PlaceLocation placeLocation) onSelectPlaceLocation;
   @override
   State<LocationInput> createState() {
     return _LocationInputSTate();
@@ -22,24 +22,9 @@ class _LocationInputSTate extends State<LocationInput> {
   String get locationImage {
     final lat = _pickedLocation!.lat;
     final lng = _pickedLocation!.lng;
-    return
-        // 'https://maptoolkit.p.rapidapi.com/staticmap?center=$lat%2C$lng&zoom=11&size=640x480&maptype=toursprung-terrain&format=png';
-        'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/$lng,$lat,12.26,0/400x400?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
+
+    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/$lng,$lat,14.25,0,60/600x600?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A';
   }
-
-  // void _getCurrentLocationImage() async {
-  //   final url1 = Uri.https(locationImage);
-
-  //   final url = Uri.parse(locationImage);
-  //   final response = await http.get(
-  //     headers: {
-  //       'X-RapidAPI-Key': '1cbcc40ba0msh093f50965a69601p1de1c7jsn621c959700a8',
-  //       'X-RapidAPI-Host': 'maptoolkit.p.rapidapi.com',
-  //     },
-  //     url1,
-  //   );
-  //   print(response.statusCode);
-  // }
 
   void _getCurrentLocation() async {
     Location location = Location();
@@ -68,29 +53,25 @@ class _LocationInputSTate extends State<LocationInput> {
     });
     locationData = await location.getLocation();
 
-    // final url = Uri.parse(
-    //     'https://maps.googleapis.com/maps/api/geocode/json?latlng=${locationData.latitude},${locationData.latitude}&key=AIzaSyBK5pv56usZuOLJZJksI_9iJGcrUtcPp4U');
-    // final response = await http.get(url);
-    //
     final url = Uri.parse(
         'https://api.mapbox.com/geocoding/v5/mapbox.places/${locationData.longitude},${locationData.latitude}.json?access_token=pk.eyJ1Ijoia3ViZXJtIiwiYSI6ImNsajJwZGx0YjFhaTgzcXQ4M2E0NzBxbW8ifQ.lTuvjewt2c8ZioREoK8B8A');
 
     final response = await http.get(url);
 
     final resData = json.decode(response.body);
+    // print(resData);
     print(resData['features'][0]['place_name']);
 
     setState(() {
       _pickedLocation = PlaceLocation(
-          address: resData['Results'][0]['address'],
+          address: resData['features'][0]['place_name'],
           lat: locationData.latitude!,
           lng: locationData.longitude!);
+
       _isGettingCurrentLocation = false;
     });
-    print(locationData.longitude);
-    print(locationData.latitude);
 
-    widget.placeLocation(_pickedLocation!);
+    widget.onSelectPlaceLocation(_pickedLocation!);
   }
 
   @override

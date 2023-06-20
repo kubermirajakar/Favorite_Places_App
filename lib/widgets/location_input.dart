@@ -35,8 +35,6 @@ class _LocationInputSTate extends State<LocationInput> {
     final response = await http.get(url);
 
     final resData = json.decode(response.body);
-    // print(resData);
-    print(resData['features'][0]['place_name']);
 
     setState(() {
       _pickedLocation = PlaceLocation(
@@ -79,6 +77,9 @@ class _LocationInputSTate extends State<LocationInput> {
   }
 
   void _selectOnMap() async {
+    setState(() {
+      _isGettingCurrentLocation = true;
+    });
     final latLngValueRetured = await Navigator.of(context).push<LatLng>(
       MaterialPageRoute(
         builder: (ctx) => MapScreen(isSelecting: true),

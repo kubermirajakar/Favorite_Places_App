@@ -7,8 +7,10 @@ class PlacesList extends StatelessWidget {
   const PlacesList({super.key, required this.places});
 
   final List<Place> places;
+
   @override
   Widget build(BuildContext context) {
+    print(places);
     if (places.isEmpty) {
       return Center(
         child: Text(
